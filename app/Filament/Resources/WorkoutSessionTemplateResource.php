@@ -47,7 +47,13 @@ class WorkoutSessionTemplateResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('exercises_count')
+                    ->counts('exercises')
+                    ->label('Total Exercises')
+                    ->sortable(),
             ])
             ->filters([
                 //
