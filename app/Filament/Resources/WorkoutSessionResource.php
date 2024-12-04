@@ -5,8 +5,11 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\WorkoutSessionResource\Pages;
 use App\Models\Exercise;
 use App\Models\WorkoutSession;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -26,32 +29,43 @@ class WorkoutSessionResource extends Resource
         $exercises = Exercise::select('id', 'name')->get()->pluck('name', 'id');
 
         return $form
+            ->columns(1)
             ->schema([
                 Wizard::make([
                     Wizard\Step::make('Select Template')
-                        ->schema([
-                            Select::make('workout_session_template_id')
-                                ->label('Template')
-                                ->searchable()
-                                ->options(fn () => \App\Models\WorkoutSessionTemplate::all()->pluck('name', 'id'))
-                                ->live()
-                                ->required()
-                                ->afterStateUpdated(function (Get $get, Set $set, ?string $state, ?string $old) {
-                                    if ($state === $old) {
-                                        return;
-                                    }
+                        ->columnSpanFull()
+                        ->description('Select a template to load default exercises')
+                        ->schema(function () {
+                            $templates = \App\Models\WorkoutSessionTemplate::select(['name', 'description', 'id'])->get();
+                            $options = $templates->mapWithKeys(fn ($template) => [$template->id => $template->name])->toArray();
+                            $descriptions = $templates->mapWithKeys(fn ($template) => [$template->id => $template->description])->toArray();
 
-                                    $template = \App\Models\WorkoutSessionTemplate::with('exercises.exercise')->find($get('workout_session_template_id'));
+                            return [
+                                Radio::make('workout_session_template_id')
+                                    ->label('Template')
+                                    ->options($options)
+                                    ->descriptions($descriptions)
+                                    ->live()
+                                    ->required()
+                                    ->afterStateUpdated(function (Get $get, Set $set, ?string $state, ?string $old) {
+                                        if ($state === $old) {
+                                            return;
+                                        }
 
-                                    $default_exercises = $template->exercises
-                                        ->sortBy('order_in_session')
-                                        ->map(fn ($exercise) => ['exercise_id' => $exercise->exercise_id])
-                                        ->toArray();
+                                        $template = \App\Models\WorkoutSessionTemplate::with('exercises.exercise')->find($get('workout_session_template_id'));
 
-                                    $set('exercises', $default_exercises);
-                                }),
-                        ]),
-                    Wizard\Step::make('Session Details')
+                                        $default_exercises = $template->exercises
+                                            ->sortBy('order_in_session')
+                                            ->map(fn ($exercise) => ['exercise_id' => $exercise->exercise_id])
+                                            ->toArray();
+
+                                        $set('exercises', $default_exercises);
+                                        $set('name', $template->name);
+                                    }),
+                            ];
+                        }),
+                    Wizard\Step::make('Update Session Exercises')
+                        ->description('Add or remove the exercise that you will do in this session')
                         ->schema(function () use ($exercises) {
                             return [
                                 Repeater::make('exercises')
@@ -66,10 +80,19 @@ class WorkoutSessionResource extends Resource
                                         // TODO: Check why new array item is created on reorder
                                         $set('exercises', array_filter($state, fn ($exercise) => is_array($exercise)));
                                     }),
+                                TextInput::make('name')
+                                    ->label('Session Name')
+                                    ->helperText('Give a name to this session')
+                                    ->required(),
                             ];
-
                         }),
-                ]),
+                ])
+                    ->submitAction(
+                        Action::make('create')
+                            ->label('Start Session')
+                            ->submit('create')
+                            ->keyBindings(['mod+s'])
+                    ),
             ]);
     }
 

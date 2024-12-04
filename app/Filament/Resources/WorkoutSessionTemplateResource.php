@@ -7,6 +7,7 @@ use App\Models\WorkoutSessionTemplate;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -27,6 +28,11 @@ class WorkoutSessionTemplateResource extends Resource
                     ->schema([
                         TextInput::make('name')
                             ->required(),
+
+                        Textarea::make('description')
+                            ->hint(fn ($state, $component) => 'left: '.$component->getMaxLength() - strlen($state).' characters')
+                            ->maxlength(10)
+                            ->reactive(),
 
                         Repeater::make('exercises')
                             ->schema([

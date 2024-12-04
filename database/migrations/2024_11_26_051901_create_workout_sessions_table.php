@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('workout_session_template_id')->constrained('workout_session_templates');
             $table->string('name');
             $table->dateTime('session_start_at')->default(now());
-            $table->dateTime('session_end_at');
+            $table->dateTime('session_end_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
