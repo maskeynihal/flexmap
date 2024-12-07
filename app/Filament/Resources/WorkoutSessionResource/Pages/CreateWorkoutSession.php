@@ -29,10 +29,10 @@ class CreateWorkoutSession extends CreateRecord
         return StartWorkoutSessionAction::execute($data);
     }
 
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
-    }
+    // protected function getRedirectUrl(): string
+    // {
+    //     return $this->getResource()::getUrl('edit');
+    // }
 
     protected function getCreatedNotificationTitle(): ?string
     {

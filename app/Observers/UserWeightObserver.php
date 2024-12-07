@@ -13,6 +13,5 @@ class UserWeightObserver
     public function creating(UserWeight $userWeight): void
     {
         $userWeight->user_id = Auth::id();
-
     }
 }

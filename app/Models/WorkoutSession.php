@@ -29,4 +29,9 @@ class WorkoutSession extends Model
     {
         return $this->belongsTo(WorkoutSessionTemplate::class);
     }
+
+    public function exerciseWorkoutSession()
+    {
+        return $this->hasMany(ExerciseWorkoutSession::class);
+    }
 }

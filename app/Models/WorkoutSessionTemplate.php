@@ -23,7 +23,7 @@ class WorkoutSessionTemplate extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function exercises()
+    public function exerciseWorkoutSessionTemplate()
     {
         return $this->hasMany(ExerciseWorkoutSessionTemplate::class, 'workout_session_template_id', 'id');
     }

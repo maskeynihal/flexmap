@@ -19,5 +19,23 @@ class StartWorkoutSessionAction
             'name' => $template->name,
             'session_start_at' => now(),
         ]);
+
+        $exerciseWorkoutSessions = $workoutSession->exerciseWorkoutSession()->createMany(
+            collect($data['exercises'])->map(function ($exercise_id, $index) {
+                return [
+                    'exercise_id' => $exercise_id,
+                    'order_in_session' => $index + 1,
+                ];
+            })
+        );
+
+        foreach ($exerciseWorkoutSessions as $exerciseWorkoutSession) {
+            $exerciseWorkoutSession->exerciseLogs()->create([
+                'order_in_session' => 1,
+                'exercise_id' => $exerciseWorkoutSession->exercise_id,
+            ]);
+        }
+
+        return $workoutSession;
     }
 }

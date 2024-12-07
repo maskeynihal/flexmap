@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Observers\ExerciseLogObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy(ExerciseLogObserver::class)]
 class ExerciseLog extends Model
 {
     use SoftDeletes;
 
     public $fillable = [
-        'workout_session_id',
-        'exercise_group_identifier',
+        'exercise_workout_session_id',
         'user_id',
         'exercise_id',
         'order_in_session',
@@ -32,9 +34,9 @@ class ExerciseLog extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function workoutSession()
+    public function exerciseWorkoutSession()
     {
-        return $this->belongsTo(WorkoutSession::class);
+        return $this->belongsTo(ExerciseWorkoutSession::class);
     }
 
     public function exercise()

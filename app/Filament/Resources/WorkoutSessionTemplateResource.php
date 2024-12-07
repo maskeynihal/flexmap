@@ -29,20 +29,16 @@ class WorkoutSessionTemplateResource extends Resource
                         TextInput::make('name')
                             ->required(),
 
-                        Textarea::make('description')
-                            ->hint(fn ($state, $component) => 'left: '.$component->getMaxLength() - strlen($state).' characters')
-                            ->maxlength(10)
-                            ->reactive(),
-
-                        Repeater::make('exercises')
-                            ->schema([
+                        Textarea::make('description'),
+                        Repeater::make('exerciseWorkoutSessionTemplate')
+                            ->simple(
                                 Select::make('exercise_id')
                                     ->label('Exercise')
                                     ->options(fn () => \App\Models\Exercise::select('id', 'name')->get()->pluck('name', 'id'))
                                     ->searchable()
                                     ->required()
-                                    ->searchPrompt('Search exercise by it\'s name or category'),
-                            ])
+                                    ->searchPrompt('Search exercise by it\'s name or category')
+                            )
                             ->relationship()
                             ->orderColumn('order_in_session'),
                     ]),
@@ -56,8 +52,8 @@ class WorkoutSessionTemplateResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('exercises_count')
-                    ->counts('exercises')
+                Tables\Columns\TextColumn::make('exercise_workout_session_template_count')
+                    ->counts('exerciseWorkoutSessionTemplate')
                     ->label('Total Exercises')
                     ->sortable(),
             ])

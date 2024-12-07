@@ -52,9 +52,9 @@ class WorkoutSessionResource extends Resource
                                             return;
                                         }
 
-                                        $template = \App\Models\WorkoutSessionTemplate::with('exercises.exercise')->find($get('workout_session_template_id'));
+                                        $template = \App\Models\WorkoutSessionTemplate::with('exerciseWorkoutSessionTemplate')->find($get('workout_session_template_id'));
 
-                                        $default_exercises = $template->exercises
+                                        $default_exercises = $template->exerciseWorkoutSessionTemplate
                                             ->sortBy('order_in_session')
                                             ->map(fn ($exercise) => ['exercise_id' => $exercise->exercise_id])
                                             ->toArray();

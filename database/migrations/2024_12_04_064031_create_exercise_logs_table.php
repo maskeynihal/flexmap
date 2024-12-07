@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('workout_session_id')->nullable()->constrained();
+            $table->foreignId('exercise_workout_session_id')->nullable()->constrained();
             $table->foreignId('exercise_id')->constrained();
 
-            $table->string('exercise_group_identifier');
-            $table->unsignedTinyInteger('order_in_session');
+            $table->unsignedTinyInteger('order_in_session')->nullable();
             $table->unsignedTinyInteger('sets')->nullable();
             $table->unsignedTinyInteger('reps')->nullable();
             $table->unsignedTinyInteger('weight')->nullable();
