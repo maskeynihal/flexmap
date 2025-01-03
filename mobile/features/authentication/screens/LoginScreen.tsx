@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { TextInput, Button, Title, Text, HelperText } from "react-native-paper";
-import { AuthContext } from "../AuthContext";
 import { Controller, useForm } from "react-hook-form";
 import lang from "@/lang/en/login";
+import { Link } from "expo-router";
 
 type LoginInputs = {
   email: string;
@@ -40,7 +40,7 @@ const LoginScreen = () => {
   // };
 
   return (
-    <View style={styles.container}>
+    <>
       <Title style={styles.title}>Login</Title>
       <Controller
         control={control}
@@ -100,14 +100,11 @@ const LoginScreen = () => {
       >
         Login
       </Button>
-      <Button
-        mode="text"
-        // onPress={() => navigation.navigate("Register")}
-        style={styles.button}
-      >
-        Don't have an account? Register
-      </Button>
-    </View>
+
+      <Link href="/register" style={styles.button}>
+        Don't have an account? <Text style={styles.registerText}>Register</Text>
+      </Link>
+    </>
   );
 };
 
@@ -127,6 +124,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 8,
+  },
+  registerText: {
+    textDecorationLine: "underline",
   },
 });
 

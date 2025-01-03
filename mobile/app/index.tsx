@@ -1,11 +1,11 @@
-import { View } from "react-native";
+import { View, SafeAreaView } from "react-native";
 
 import { Link } from "expo-router";
 
-export default function Pagexx() {
+export default function Page() {
   return (
-    <View>
+    <SafeAreaView>
       <Link href="/login">Login</Link>
-    </View>
+    </SafeAreaView>
   );
 }

@@ -1,11 +1,11 @@
-import { sizes } from "@/config/designTokens";
-import LoginScreen from "@/features/authentication/screens/LoginScreen";
 import { SafeAreaView, StyleSheet, View } from "react-native";
+import RegisterScreen from "@/features/authentication/screens/RegisterScreen";
+import { sizes } from "@/config/designTokens";
 
-export default function Login() {
+export default function Register() {
   return (
     <View style={styles.container}>
-      <LoginScreen />
+      <RegisterScreen />
     </View>
   );
 }
